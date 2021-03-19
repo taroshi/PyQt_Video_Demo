@@ -12,6 +12,7 @@ class myMainWindow(Ui_MainWindow,QMainWindow):
     def __init__(self):
         super(Ui_MainWindow, self).__init__()
         self.setupUi(self)
+        self.sld_video_pressed=False  #判断当前进度条识别否被鼠标点击
         self.videoFullScreen = False   # 判断当前widget是否全屏
         self.videoFullScreenWidget = myVideoWidget()   # 创建一个全屏的widget
         self.videoFullScreenWidget.setFullScreen(1)
@@ -24,18 +25,43 @@ class myMainWindow(Ui_MainWindow,QMainWindow):
         self.player.positionChanged.connect(self.changeSlide)      # change Slide
         self.videoFullScreenWidget.doubleClickedItem.connect(self.videoDoubleClicked)  #双击响应
         self.wgt_video.doubleClickedItem.connect(self.videoDoubleClicked)   #双击响应
+        self.sld_video.setTracking(False)
+        self.sld_video.sliderReleased.connect(self.releaseSlider)
+        self.sld_video.sliderPressed.connect(self.pressSlider)
+        self.sld_video.sliderMoved.connect(self.moveSlider)
+
+    def moveSlider(self, position):
+        if self.player.duration() > 0:  # 开始播放后才允许进行跳转
+            video_position = int((position / 100) * self.player.duration())
+            self.player.setPosition(video_position)
+            self.lab_video.setText(str(round(position, 2)) + '%')
+
+
+    def pressSlider(self):
+        self.sld_video_pressed = True
+        print("pressed")
+
+    def releaseSlider(self):
+        self.sld_video_pressed = False
+
     def openVideoFile(self):
         self.player.setMedia(QMediaContent(QFileDialog.getOpenFileUrl()[0]))  # 选取视频文件
         self.player.play()  # 播放视频
+
     def playVideo(self):
         self.player.play()
+
     def pauseVideo(self):
         self.player.pause()
-    def changeSlide(self,position):
-        self.vidoeLength = self.player.duration()+0.1
-        self.sld_video.setValue(round((position/self.vidoeLength)*100))
-        self.lab_video.setText(str(round((position/self.vidoeLength)*100,2))+'%')
-    def videoDoubleClicked(self,text):
+
+    def changeSlide(self, position):
+        if not self.sld_video_pressed:  # 进度条被鼠标点击时不更新
+            self.vidoeLength = self.player.duration()+0.1
+            self.sld_video.setValue(round((position/self.vidoeLength)*100))
+            self.lab_video.setText(str(round((position/self.vidoeLength)*100, 2))+'%')
+
+    def videoDoubleClicked(self, text):
+
         if self.player.duration() > 0:  # 开始播放后才允许进行全屏操作
             if self.videoFullScreen:
                 self.player.pause()
