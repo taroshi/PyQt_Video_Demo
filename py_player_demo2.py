@@ -28,7 +28,15 @@ class myMainWindow(Ui_MainWindow,QMainWindow):
         self.sld_video.setTracking(False)
         self.sld_video.sliderReleased.connect(self.releaseSlider)
         self.sld_video.sliderPressed.connect(self.pressSlider)
-        self.sld_video.sliderMoved.connect(self.moveSlider)
+        self.sld_video.sliderMoved.connect(self.moveSlider)   # 进度条拖拽跳转
+        self.sld_video.ClickedValue.connect(self.moveSlider)  # 进度条点击跳转
+        self.sld_audio.valueChanged.connect(self.volumeChange)  # 控制声音播放
+
+    def volumeChange(self, position):
+        volume= round(position/self.sld_audio.maximum()*100)
+        print("vlume %f" %volume)
+        self.player.setVolume(volume)
+        self.lab_audio.setText("volume:"+str(volume)+"%")
 
     def moveSlider(self, position):
         if self.player.duration() > 0:  # 开始播放后才允许进行跳转
@@ -36,13 +44,18 @@ class myMainWindow(Ui_MainWindow,QMainWindow):
             self.player.setPosition(video_position)
             self.lab_video.setText(str(round(position, 2)) + '%')
 
-
     def pressSlider(self):
         self.sld_video_pressed = True
         print("pressed")
 
     def releaseSlider(self):
         self.sld_video_pressed = False
+
+    def changeSlide(self, position):
+        if not self.sld_video_pressed:  # 进度条被鼠标点击时不更新
+            self.vidoeLength = self.player.duration()+0.1
+            self.sld_video.setValue(round((position/self.vidoeLength)*100))
+            self.lab_video.setText(str(round((position/self.vidoeLength)*100, 2))+'%')
 
     def openVideoFile(self):
         self.player.setMedia(QMediaContent(QFileDialog.getOpenFileUrl()[0]))  # 选取视频文件
@@ -53,12 +66,6 @@ class myMainWindow(Ui_MainWindow,QMainWindow):
 
     def pauseVideo(self):
         self.player.pause()
-
-    def changeSlide(self, position):
-        if not self.sld_video_pressed:  # 进度条被鼠标点击时不更新
-            self.vidoeLength = self.player.duration()+0.1
-            self.sld_video.setValue(round((position/self.vidoeLength)*100))
-            self.lab_video.setText(str(round((position/self.vidoeLength)*100, 2))+'%')
 
     def videoDoubleClicked(self, text):
 
@@ -75,8 +82,6 @@ class myMainWindow(Ui_MainWindow,QMainWindow):
                 self.player.setVideoOutput(self.videoFullScreenWidget)
                 self.player.play()
                 self.videoFullScreen = True
-
-
 
 
 if __name__ == '__main__':

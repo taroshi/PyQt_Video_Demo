@@ -10,3 +10,5 @@ class myVideoWidget(QVideoWidget):
 
     def mouseDoubleClickEvent(self, QMouseEvent):     #双击事件
         self.doubleClickedItem.emit("double clicked")
+
+
