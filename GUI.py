@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(660, 419)
+        MainWindow.resize(615, 404)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
@@ -53,10 +53,7 @@ class Ui_MainWindow(object):
         self.lab_video.setMaximumSize(QtCore.QSize(16777215, 50))
         self.lab_video.setObjectName("lab_video")
         self.gridLayout.addWidget(self.lab_video, 1, 1, 1, 1)
-        self.splitter_2 = QtWidgets.QSplitter(self.centralwidget)
-        self.splitter_2.setOrientation(QtCore.Qt.Horizontal)
-        self.splitter_2.setObjectName("splitter_2")
-        self.splitter = QtWidgets.QSplitter(self.splitter_2)
+        self.splitter = QtWidgets.QSplitter(self.centralwidget)
         self.splitter.setOrientation(QtCore.Qt.Horizontal)
         self.splitter.setObjectName("splitter")
         self.btn_open = QtWidgets.QPushButton(self.splitter)
@@ -74,12 +71,14 @@ class Ui_MainWindow(object):
         self.sld_audio.setProperty("value", 99)
         self.sld_audio.setOrientation(QtCore.Qt.Horizontal)
         self.sld_audio.setObjectName("sld_audio")
-        self.lab_audio = QtWidgets.QLabel(self.splitter_2)
+        self.lab_audio = QtWidgets.QLabel(self.splitter)
         self.lab_audio.setObjectName("lab_audio")
-        self.gridLayout.addWidget(self.splitter_2, 2, 0, 1, 1)
+        self.btn_cast = QtWidgets.QPushButton(self.splitter)
+        self.btn_cast.setObjectName("btn_cast")
+        self.gridLayout.addWidget(self.splitter, 2, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 660, 23))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 615, 23))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -97,6 +96,7 @@ class Ui_MainWindow(object):
         self.btn_play.setText(_translate("MainWindow", "播放"))
         self.btn_stop.setText(_translate("MainWindow", "暂停"))
         self.lab_audio.setText(_translate("MainWindow", "volume:100%"))
+        self.btn_cast.setText(_translate("MainWindow", "截图"))
 
 from myVideoWidget import myVideoWidget
 from myvideoslider import myVideoSlider
